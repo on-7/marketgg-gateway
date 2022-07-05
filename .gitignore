@@ -1,5 +1,6 @@
 ### Custom ignoring files ###
 application-*.yml
+*.pem
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,windows,intellij+iml,maven,java
