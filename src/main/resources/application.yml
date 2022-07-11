@@ -1,1 +1,6 @@
-# application.yml
+server:
+  port: 6060
+
+spring:
+  profiles:
+    include: jwt, gateway
