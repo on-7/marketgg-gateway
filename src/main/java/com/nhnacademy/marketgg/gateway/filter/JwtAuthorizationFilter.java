@@ -32,6 +32,8 @@ import reactor.core.publisher.Mono;
 public class JwtAuthorizationFilter
     extends AbstractGatewayFilterFactory<JwtAuthorizationFilter.Config> {
 
+    private static final int HEADER_BEARER = 7;
+
     private final String secret;
     private final Key key;
     private final String refreshRequestUrl;
@@ -61,10 +63,10 @@ public class JwtAuthorizationFilter
                 return onError(exchange, "토큰이 존재하지 않습니다.");
             }
 
-            String authorizationHeader =
-                Objects.requireNonNull(headers.get(HttpHeaders.AUTHORIZATION)).get(0);
+            String authorizationHeader
+                = Objects.requireNonNull(headers.get(HttpHeaders.AUTHORIZATION)).get(0);
 
-            String jwt = authorizationHeader.substring(7);
+            String jwt = authorizationHeader.substring(HEADER_BEARER);
 
             Optional<String> token = Optional.ofNullable(parseToken(jwt));
 
