@@ -17,7 +17,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * Redis 설정을 담당합니다.
  */
-
 @Configuration
 public class RedisConfig {
 
@@ -36,6 +35,11 @@ public class RedisConfig {
         this.password = getRedisPassword(redisPasswordUrl);
     }
 
+    /**
+     * Redis 연결과 관련된 설정을 하는 RedisConnectionFactory 를 스프링 빈으로 등록한다.
+     *
+     * @return RedisConnectionFactory
+     */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -48,13 +52,21 @@ public class RedisConfig {
         return new LettuceConnectionFactory(configuration);
     }
 
+    /**
+     * RedisTemplate 을 스프링 빈 등록합니다.
+     *
+     * @param redisConnectionFactory - 스프링 빈으로 등록된 RedisConnectionFactory
+     * @return RedisTemplate
+     */
     @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, Object> redisTemplate(
+        RedisConnectionFactory redisConnectionFactory) {
+
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
 
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(ExpiredToken.class));
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
 
         return redisTemplate;
     }
