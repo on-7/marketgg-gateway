@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 /**
  * JWT 토큰을 이용한 인증을 해주는 필터입니다.
  */
-
 @Slf4j
 @Component
 public class JwtAuthorizationFilter
@@ -27,7 +26,7 @@ public class JwtAuthorizationFilter
     private final String refreshRequestUrl;
     private final RedisTemplate<String, Object> redisTemplate;
 
-    /**
+    /**영
      * 생성자입니다.
      *
      * @param jwtSecretUrl    - Secure Manager 에서 JWt Secret Key 를 요청하는 URL 입니다.
@@ -69,11 +68,12 @@ public class JwtAuthorizationFilter
                 return chain.filter(exchange);
             }
 
-            HttpHeaders responseHeader = exchange.getResponse().getHeaders();
+            HttpHeaders requestHeader = exchange.getRequest().getHeaders();
 
-            responseHeader.setBearerAuth(token.get());
-            responseHeader.set("USER-EMAIL", JwtUtils.getEmail(jwt, key));
-            responseHeader.set(JwtUtils.AUTHORITIES, JwtUtils.getRoles(jwt, key));
+            requestHeader.setBearerAuth(token.get());
+
+            requestHeader.set("USER-EMAIL", JwtUtils.getEmail(jwt, key));
+            requestHeader.set("WWW-Authenticate", JwtUtils.getRoles(jwt, key));
 
             return chain.filter(exchange);
         };

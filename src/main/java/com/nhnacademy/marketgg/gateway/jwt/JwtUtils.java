@@ -22,7 +22,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * JWT 다루는 Util 클래스 입니다.
  */
-
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JwtUtils {
@@ -57,8 +56,8 @@ public class JwtUtils {
     /**
      * 토큰을 파싱하여 사용 가능한 토큰인지 확인합니다.
      *
-     * @param token             - 사용자의 JWT 입니다.
-     * @param key               - 토큰 파싱에 필요한 Key 입니다.
+     * @param token - 사용자의 JWT 입니다.
+     * @param key - 토큰 파싱에 필요한 Key 입니다.
      * @param refreshRequestUrl Refresh Token 을 요청할 수 있는 URL 입니다.
      * @return 사용가능한 JWT 를 반환합니다.
      */
@@ -71,14 +70,14 @@ public class JwtUtils {
 
             return token;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.error("잘못된 JWT 서명입니다.");
+            log.error("잘못된 JWT 서명입니다.", e);
         } catch (ExpiredJwtException e) {
-            log.error("만료된 JWT 토큰입니다.");
+            log.error("만료된 JWT 토큰입니다.", e);
             return requestRenewToken(token, refreshRequestUrl);
         } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰입니다.");
+            log.error("지원되지 않는 JWT 토큰입니다.", e);
         } catch (IllegalArgumentException e) {
-            log.error("JWT 토큰이 잘못되었습니다.");
+            log.error("JWT 토큰이 잘못되었습니다.", e);
         }
         return null;
     }
@@ -91,7 +90,7 @@ public class JwtUtils {
                                                .headers(httpHeaders ->
                                                    httpHeaders.setBearerAuth(jwt))
                                                .exchangeToMono(r -> r.toEntity(Void.class))
-                                          .block())
+                                               .block())
                                   .getHeaders()
                                   .get(HttpHeaders.AUTHORIZATION))
                        .map(h -> h.get(0).substring(7))
@@ -120,7 +119,8 @@ public class JwtUtils {
         for (String role : (List<String>) getClaims(token, key).get(AUTHORITIES)) {
             sb.append(role).append(",");
         }
-        return sb.toString();
+
+        return sb.substring(0, sb.toString().length() - 1);
     }
 
     private static Claims getClaims(String token, Key key) {

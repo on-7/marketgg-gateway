@@ -77,7 +77,7 @@ public class RedisConfig {
                                                           .uri(passwordUrl)
                                                           .retrieve()
                                                           .bodyToMono(Map.class)
-                                                          .timeout(Duration.ofSeconds(3))
+                                                          .timeout(Duration.ofSeconds(5))
                                                           .block();
 
         return Optional.ofNullable(block)
