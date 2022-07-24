@@ -1,4 +1,4 @@
-package com.nhnacademy.marketgg.gateway.exception;
+package com.nhnacademy.exception;
 
 public class SecureManagerException extends RuntimeException {
 
