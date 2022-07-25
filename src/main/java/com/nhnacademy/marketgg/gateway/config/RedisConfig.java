@@ -1,11 +1,13 @@
 package com.nhnacademy.marketgg.gateway.config;
 
+import com.nhnacademy.exception.SecureManagerException;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -22,19 +24,18 @@ public class RedisConfig {
 
     private static final int REDIS_DURATION_SECOND = 5;
 
-    @Value("${redis.host}")
-    private String host;
-
-    @Value("${redis.port}")
-    private int port;
-
-    @Value("${redis.database}")
-    private int database;
-
+    private final String host;
+    private final int port;
+    private final int database;
     private final String password;
 
-    public RedisConfig(@Value("${redis.password-url}") String redisPasswordUrl) {
-        this.password = getRedisPassword(redisPasswordUrl);
+    public RedisConfig(@Value("${redis.password-url}") String redisPasswordUrl,
+                       @Value("${redis.url}") String redisInfoUrl) {
+        String[] info = this.getRedisInfo(redisInfoUrl);
+        this.host = info[0];
+        this.port = Integer.parseInt(info[1]);
+        this.database = Integer.parseInt(info[2]);
+        this.password = this.getRedisPassword(redisPasswordUrl);
     }
 
     /**
@@ -73,15 +74,45 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    private String[] getRedisInfo(String infoUrl) {
+        Map<String, Map<String, String>> block
+            = WebClient.create()
+                       .get()
+                       .uri(infoUrl)
+                       .retrieve()
+                       .bodyToMono(
+                           new ParameterizedTypeReference<Map<String, Map<String, String>>>() {
+                           })
+                       .timeout(Duration.ofSeconds(
+                           REDIS_DURATION_SECOND))
+                       .block();
+
+        String connectInfo = Optional.ofNullable(block)
+                                     .orElseThrow(IllegalArgumentException::new)
+                                     .get("body")
+                                     .get("secret");
+
+        String[] info = connectInfo.split(":");
+
+        if (info.length != 3) {
+            throw new SecureManagerException();
+        }
+
+        return info;
+    }
+
     private String getRedisPassword(String passwordUrl) {
-        Map<String, Map<String, String>> block = WebClient.create()
-                                                          .get()
-                                                          .uri(passwordUrl)
-                                                          .retrieve()
-                                                          .bodyToMono(Map.class)
-                                                          .timeout(Duration.ofSeconds(
-                                                              REDIS_DURATION_SECOND))
-                                                          .block();
+        Map<String, Map<String, String>> block
+            = WebClient.create()
+                       .get()
+                       .uri(passwordUrl)
+                       .retrieve()
+                       .bodyToMono(
+                           new ParameterizedTypeReference<Map<String, Map<String, String>>>() {
+                           })
+                       .timeout(Duration.ofSeconds(
+                           REDIS_DURATION_SECOND))
+                       .block();
 
         return Optional.ofNullable(block)
                        .orElseThrow(IllegalArgumentException::new)
