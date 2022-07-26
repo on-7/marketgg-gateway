@@ -11,14 +11,13 @@ import io.jsonwebtoken.security.Keys;
 import java.io.IOException;
 import java.security.Key;
 import java.time.Duration;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
@@ -36,16 +35,22 @@ public class JwtUtils {
      * @param jwtSecretUrl - JWT Secret 을 요청하는 URL 입니다.
      * @return JWT 서명에 쓰이는 Key 를 반환합니다.
      */
-    public static Key getKey(String jwtSecretUrl) {
-        return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(getJwtSecret(jwtSecretUrl)));
+    public static Key getKey(ClientHttpConnector clientHttpConnector, String jwtSecretUrl) {
+        return Keys.hmacShaKeyFor(
+            Decoders.BASE64URL.decode(getJwtSecret(clientHttpConnector, jwtSecretUrl)));
     }
 
-    private static String getJwtSecret(String jwtSecretUrl) {
-        Map<String, Map<String, String>> block = WebClient.create()
+    private static String getJwtSecret(ClientHttpConnector clientHttpConnector,
+                                       String jwtSecretUrl) {
+        Map<String, Map<String, String>> block = WebClient.builder()
+                                                          .clientConnector(clientHttpConnector)
+                                                          .build()
                                                           .get()
                                                           .uri(jwtSecretUrl)
                                                           .retrieve()
-                                                          .bodyToMono(Map.class)
+                                                          .bodyToMono(
+                                                              new ParameterizedTypeReference<Map<String, Map<String, String>>>() {
+                                                              })
                                                           .timeout(Duration.ofSeconds(3))
                                                           .block();
 
@@ -59,7 +64,7 @@ public class JwtUtils {
      * 토큰을 파싱하여 사용 가능한 토큰인지 확인합니다.
      *
      * @param token - 사용자의 JWT 입니다.
-     * @param key - 토큰 파싱에 필요한 Key 입니다.
+     * @param key   - 토큰 파싱에 필요한 Key 입니다.
      * @return 사용가능한 JWT 를 반환합니다.
      */
     public static String parseToken(String token, Key key) {
@@ -86,7 +91,7 @@ public class JwtUtils {
      * 토큰을 이용하여 사용자의 권한 정보를 얻습니다.
      *
      * @param token - JWT.
-     * @param key - JWT 파싱에 필요한 Key 입니다.
+     * @param key   - JWT 파싱에 필요한 Key 입니다.
      * @return 사용자의 권한을 반환합니다.
      */
     public static String getRoles(String token, Key key) {

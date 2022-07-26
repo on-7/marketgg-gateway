@@ -1,9 +1,12 @@
 package com.nhnacademy.marketgg.gateway.config;
 
 import com.nhnacademy.exception.SecureManagerException;
+import com.nhnacademy.marketgg.gateway.secure.SecureUtils;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,11 +17,13 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.client.reactive.ClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 
 /**
  * Redis 설정을 담당합니다.
  */
+@Slf4j
 @Configuration
 public class RedisConfig {
 
@@ -29,13 +34,17 @@ public class RedisConfig {
     private final int database;
     private final String password;
 
-    public RedisConfig(@Value("${redis.password-url}") String redisPasswordUrl,
-                       @Value("${redis.url}") String redisInfoUrl) {
-        String[] info = this.getRedisInfo(redisInfoUrl);
+    public RedisConfig(final @Value("${gg.redis.password-url}") String redisPasswordUrl,
+                       final @Value("${gg.redis.url}") String redisInfoUrl,
+                       SecureUtils secureUtils) {
+        log.info("redis info url: {}", redisInfoUrl);
+        log.info("redis password url: {}", redisPasswordUrl);
+        ClientHttpConnector clientHttpConnector = secureUtils.getClientHttpConnector();
+        String[] info = this.getRedisInfo(redisInfoUrl, clientHttpConnector);
         this.host = info[0];
         this.port = Integer.parseInt(info[1]);
         this.database = Integer.parseInt(info[2]);
-        this.password = this.getRedisPassword(redisPasswordUrl);
+        this.password = this.getRedisPassword(redisPasswordUrl, clientHttpConnector);
     }
 
     /**
@@ -74,9 +83,11 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    private String[] getRedisInfo(String infoUrl) {
+    private String[] getRedisInfo(String infoUrl, ClientHttpConnector clientHttpConnector) {
         Map<String, Map<String, String>> block
-            = WebClient.create()
+            = WebClient.builder()
+                       .clientConnector(clientHttpConnector)
+                       .build()
                        .get()
                        .uri(infoUrl)
                        .retrieve()
@@ -101,9 +112,11 @@ public class RedisConfig {
         return info;
     }
 
-    private String getRedisPassword(String passwordUrl) {
+    private String getRedisPassword(String passwordUrl, ClientHttpConnector clientHttpConnector) {
         Map<String, Map<String, String>> block
-            = WebClient.create()
+            = WebClient.builder()
+                       .clientConnector(clientHttpConnector)
+                       .build()
                        .get()
                        .uri(passwordUrl)
                        .retrieve()
