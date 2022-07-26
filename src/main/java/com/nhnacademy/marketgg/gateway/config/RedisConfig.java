@@ -5,7 +5,6 @@ import com.nhnacademy.marketgg.gateway.secure.SecureUtils;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,8 +36,6 @@ public class RedisConfig {
     public RedisConfig(final @Value("${gg.redis.password-url}") String redisPasswordUrl,
                        final @Value("${gg.redis.url}") String redisInfoUrl,
                        SecureUtils secureUtils) {
-        log.info("redis info url: {}", redisInfoUrl);
-        log.info("redis password url: {}", redisPasswordUrl);
         ClientHttpConnector clientHttpConnector = secureUtils.getClientHttpConnector();
         String[] info = this.getRedisInfo(redisInfoUrl, clientHttpConnector);
         this.host = info[0];

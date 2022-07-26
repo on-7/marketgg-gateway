@@ -38,7 +38,6 @@ public class JwtAuthorizationFilter
                                   RedisTemplate<String, Object> redisTemplate,
                                   SecureUtils secureUtils) {
         super(Config.class);
-        log.info("jwt-secret-url");
         this.key = JwtUtils.getKey(secureUtils.getClientHttpConnector(), jwtSecretUrl);
         this.redisTemplate = redisTemplate;
     }
