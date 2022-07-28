@@ -1,6 +1,7 @@
 package com.nhnacademy.marketgg.gateway.filter;
 
 import com.nhnacademy.marketgg.gateway.jwt.JwtUtils;
+import com.nhnacademy.marketgg.gateway.secure.SecureUtils;
 import java.security.Key;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,10 +34,11 @@ public class JwtAuthorizationFilter
      * @param jwtSecretUrl  - Secure Manager 에서 JWt Secret Key 를 요청하는 URL 입니다.
      * @param redisTemplate - 스프링 빈에 등록된 RedisTemplate 을 주입받습니다.
      */
-    public JwtAuthorizationFilter(@Value("${jwt.secret-url}") String jwtSecretUrl,
-                                  RedisTemplate<String, Object> redisTemplate) {
+    public JwtAuthorizationFilter(@Value("${gg.jwt.secret-url}") String jwtSecretUrl,
+                                  RedisTemplate<String, Object> redisTemplate,
+                                  SecureUtils secureUtils) {
         super(Config.class);
-        this.key = JwtUtils.getKey(jwtSecretUrl);
+        this.key = JwtUtils.getKey(secureUtils.getClientHttpConnector(), jwtSecretUrl);
         this.redisTemplate = redisTemplate;
     }
 

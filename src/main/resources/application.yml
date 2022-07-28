@@ -1,13 +1,6 @@
-server:
-  port: 6060
-
 spring:
-  profiles:
-    include: gateway
+  application:
+    name: marketgg-gateway
 
-redis:
-  url: https://api-keymanager.cloud.toast.com/keymanager/v1.0/appkey/mcXcTmrnbRezlila/secrets/5408ab7824e3463fa31f054b9e5f19f8
-  password-url: https://api-keymanager.cloud.toast.com/keymanager/v1.0/appkey/mcXcTmrnbRezlila/secrets/42c84798d4784e83be3c568a75809829
-
-jwt:
-  secret-url: https://api-keymanager.cloud.toast.com/keymanager/v1.0/appkey/mcXcTmrnbRezlila/secrets/2e2391a7260646499390dc43b38a3cd0
+  config:
+    import: "optional:configserver:http://133.186.209.70:8888"
