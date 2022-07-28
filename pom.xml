@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.nhnacademy.marketgg</groupId>
-    <artifactId>gateway</artifactId>
+    <artifactId>marketgg-gateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>gateway</name>
+    <name>marketgg-gateway</name>
     <description>Market GG gateway for Spring Boot</description>
 
     <properties>
