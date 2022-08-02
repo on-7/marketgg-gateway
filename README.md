@@ -14,6 +14,7 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ## Tech Stack
 
+![NGINX](https://img.shields.io/badge/NGINX-009639?style=flat&logo=NGINX&logoColor=white)
 ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
 ![ApacheMaven](https://img.shields.io/badge/Maven-C71A36?style=flat&logo=ApacheMaven&logoColor=white)
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=MySQL&logoColor=white)
@@ -21,12 +22,12 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 ![GitHubActions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=GitHubActions&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SonarQube-4E98CD?style=flat&logo=SonarQube&logoColor=white)
 
-## License
-
-Market GG is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
-
 ## Contributors
 
 <a href="https://github.com/nhn-on7/marketgg-gateway/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=nhn-on7/marketgg-gateway" />
 </a>
+
+## License
+
+Market GG is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
