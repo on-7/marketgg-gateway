@@ -10,6 +10,15 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ## Features
 
+### [@윤동열](https://github.com/eastheat10)
+
+### [@이제훈](https://github.com/corock)
+
+- 웹 서버(NGINX) 연동
+  - 도메인 설정 및 서브 도메인 추가
+  - Reverse Proxy 설정
+- 각 마이크로서비스에 대한 URL Rewriting
+
 ## Project Architecture
 
 ![marketgg-architecture-v1-0-1](https://user-images.githubusercontent.com/38161720/182819049-fc58c699-9cd8-4925-99e5-bede9647ccc2.png)
