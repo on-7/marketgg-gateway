@@ -12,6 +12,8 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ## Project Architecture
 
+![marketgg-architecture-v1-0-1](https://user-images.githubusercontent.com/38161720/182819049-fc58c699-9cd8-4925-99e5-bede9647ccc2.png)
+
 ## Tech Stack
 
 ![NGINX](https://img.shields.io/badge/NGINX-009639?style=flat&logo=NGINX&logoColor=white)
