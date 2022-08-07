@@ -19,6 +19,10 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ### [@윤동열](https://github.com/eastheat10)
 
+- Spring Cloud Gateway 적용하여 요청 라우팅
+  - `YAML` 을 이용한 라우팅 설정 
+- Custom 필터를 적용하여 요청에 대한 사용자 인증/인가 
+
 ### [@이제훈](https://github.com/corock)
 
 - 웹 서버(NGINX) 연동
@@ -42,16 +46,18 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ### Database
 
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=MySQL&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=Redis&logoColor=white)
 
 ### DevOps
 
+![NHN Cloud](https://img.shields.io/badge/-NHN%20Cloud-blue?style=flat&logo=iCloud&logoColor=white)
 ![GitHubActions](https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat&logo=GitHubActions&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SonarQube-4E98CD?style=flat&logo=SonarQube&logoColor=white)
 
 ### Frameworks
 
 ![SpringBoot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=flat&logo=SpringBoot&logoColor=white)
+![SpringCloud](https://img.shields.io/badge/Spring%20Cloud-6DB33F?style=flat&logo=Spring&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=Swagger&logoColor=white)
 
 ### Languages
