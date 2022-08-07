@@ -1,7 +1,7 @@
 package com.nhnacademy.marketgg.gateway.config;
 
-import com.nhnacademy.exception.SecureManagerException;
-import com.nhnacademy.marketgg.gateway.secure.SecureUtils;
+import com.nhnacademy.marketgg.gateway.exception.SecureManagerException;
+import com.nhnacademy.marketgg.gateway.util.SecureUtils;
 import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
@@ -33,9 +33,17 @@ public class RedisConfig {
     private final int database;
     private final String password;
 
-    public RedisConfig(final @Value("${gg.redis.password-url}") String redisPasswordUrl,
-                       final @Value("${gg.redis.url}") String redisInfoUrl,
-                       SecureUtils secureUtils) {
+    /**
+     * Redis 설정 클래스 생성자입니다.
+     *
+     * @param redisInfoUrl     - 봉투 암호화된 Redis 정보 경로
+     * @param redisPasswordUrl - 봉투 암호화된 Redis 비밀번호 경로
+     * @param secureUtils      - 보안에 필요한 유틸리티 클래스
+     */
+    public RedisConfig(final @Value("${gg.redis.url}") String redisInfoUrl,
+                       final @Value("${gg.redis.password-url}") String redisPasswordUrl,
+                       final SecureUtils secureUtils) {
+
         ClientHttpConnector clientHttpConnector = secureUtils.getClientHttpConnector();
         String[] info = this.getRedisInfo(redisInfoUrl, clientHttpConnector);
         this.host = info[0];

@@ -1,4 +1,4 @@
-package com.nhnacademy.marketgg.gateway.handler;
+package com.nhnacademy.marketgg.gateway.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

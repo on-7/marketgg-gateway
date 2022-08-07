@@ -36,21 +36,20 @@ public class JwtUtils {
      * @return JWT 서명에 쓰이는 Key 를 반환합니다.
      */
     public static Key getKey(ClientHttpConnector clientHttpConnector, String jwtSecretUrl) {
-        return Keys.hmacShaKeyFor(
-            Decoders.BASE64URL.decode(getJwtSecret(clientHttpConnector, jwtSecretUrl)));
+        return Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(getJwtSecret(clientHttpConnector, jwtSecretUrl)));
     }
 
-    private static String getJwtSecret(ClientHttpConnector clientHttpConnector,
-                                       String jwtSecretUrl) {
+    private static String getJwtSecret(ClientHttpConnector clientHttpConnector, String jwtSecretUrl) {
+        ParameterizedTypeReference<Map<String, Map<String, String>>> typeRef = new ParameterizedTypeReference<>() {
+        };
+
         Map<String, Map<String, String>> block = WebClient.builder()
                                                           .clientConnector(clientHttpConnector)
                                                           .build()
                                                           .get()
                                                           .uri(jwtSecretUrl)
                                                           .retrieve()
-                                                          .bodyToMono(
-                                                              new ParameterizedTypeReference<Map<String, Map<String, String>>>() {
-                                                              })
+                                                          .bodyToMono(typeRef)
                                                           .timeout(Duration.ofSeconds(3))
                                                           .block();
 
@@ -75,15 +74,17 @@ public class JwtUtils {
                 .parseClaimsJws(token);
 
             return token;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.error("잘못된 JWT 서명입니다.", e);
-        } catch (ExpiredJwtException e) {
-            log.error("만료된 JWT 토큰입니다.", e);
-        } catch (UnsupportedJwtException e) {
-            log.error("지원되지 않는 JWT 토큰입니다.", e);
-        } catch (IllegalArgumentException e) {
-            log.error("JWT 토큰이 잘못되었습니다.", e);
+
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException ex) {
+            log.error("잘못된 JWT 서명입니다.", ex);
+        } catch (ExpiredJwtException ex) {
+            log.error("만료된 JWT 토큰입니다.", ex);
+        } catch (UnsupportedJwtException ex) {
+            log.error("지원되지 않는 JWT 토큰입니다.", ex);
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT 토큰이 잘못되었습니다.", ex);
         }
+
         return null;
     }
 
@@ -100,8 +101,8 @@ public class JwtUtils {
 
         try {
             roles = mapper.writeValueAsString(getClaims(token, key).get(AUTHORITIES));
-        } catch (IOException e) {
-            log.error("JSON ERROR", e);
+        } catch (IOException ex) {
+            log.error("JSON ERROR", ex);
         }
 
         return roles;
@@ -118,4 +119,5 @@ public class JwtUtils {
                    .parseClaimsJws(token)
                    .getBody();
     }
+
 }
