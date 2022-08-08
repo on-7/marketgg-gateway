@@ -2,6 +2,7 @@ package com.nhnacademy.marketgg.gateway.handler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.marketgg.gateway.entity.ErrorEntity;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class WebExceptionHandler implements ErrorWebExceptionHandler {
     public Mono<Void> handle(ServerWebExchange exchange, Throwable ex) {
         log.error("", ex);
         ErrorEntity error = new ErrorEntity(ex.getMessage());
+
         byte[] bytes;
         try {
             bytes = objectMapper.writeValueAsBytes(error);

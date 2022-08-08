@@ -1,5 +1,6 @@
-package com.nhnacademy.marketgg.gateway.secure;
+package com.nhnacademy.marketgg.gateway.util;
 
+import com.nhnacademy.marketgg.gateway.exception.ClientHttpConnectionException;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import java.security.KeyStore;
@@ -7,8 +8,6 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManagerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.client.reactive.ClientHttpConnector;
@@ -16,6 +15,9 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Component;
 import reactor.netty.http.client.HttpClient;
 
+/**
+ * 보안 인증서 처리와 관련된 유틸리티 클래스입니다.
+ */
 @Slf4j
 @Component
 public class SecureUtils {
@@ -29,12 +31,16 @@ public class SecureUtils {
     @Value("${gg.keystore.password}")
     private String keystorePassword;
 
+    /**
+     * ClientHttpConnector 를 얻어옵니다.
+     *
+     * @return ClientHttpConnector
+     */
     // @Bean
     public ClientHttpConnector getClientHttpConnector() {
-
-        log.info("key store type: {}", keystoreType);
-        log.info("key store path: {}", keystorePath);
-        log.info("key store password: {}", keystorePassword);
+        log.info("Market GG key store type: {}", keystoreType);
+        log.info("Market GG key store path: {}", keystorePath);
+        log.info("Market GG key store password: {}", keystorePassword);
 
         try {
             KeyStore keyStore = KeyStore.getInstance(keystoreType);
@@ -59,13 +65,13 @@ public class SecureUtils {
                                                      .build();
 
             HttpClient httpClient = HttpClient.create()
-                                              .secure(sslContextSpec ->
-                                                  sslContextSpec.sslContext(sslContext));
+                                              .secure(sslContextSpec -> sslContextSpec.sslContext(sslContext));
 
             return new ReactorClientHttpConnector(httpClient);
-        } catch (Exception e) {
-            log.error("An error has occurred: ", e);
-            throw new RuntimeException();
+
+        } catch (Exception ex) {
+            log.error("An error has occurred: ", ex);
+            throw new ClientHttpConnectionException(ex);
         }
     }
 
