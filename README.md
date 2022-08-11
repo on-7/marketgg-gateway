@@ -28,7 +28,9 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 - 웹 서버(NGINX) 연동
   - 도메인 설정 및 서브 도메인 추가
   - Reverse Proxy 설정
+  - 보안 이슈 대응을 위한 NGINX 버전 숨김 처리
 - 각 마이크로서비스에 대한 URL Rewriting
+- 게이트웨이 CI/CD 환경 구성
 
 ## Project Architecture
 
