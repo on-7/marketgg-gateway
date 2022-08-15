@@ -3,35 +3,4 @@ spring:
     name: marketgg-gateway
 
   config:
-    import: "optional:configserver:http://133.186.209.70:8888"
-
-  cloud:
-    gateway:
-      default-filters:
-        - name: HeaderFilter
-
-      routes:
-        - id: auth-service
-          predicates:
-            - Path=/auth/v1/**
-            - Method=GET, POST, PUT, DELETE
-          filters:
-            - RewritePath=/auth/v1/(?<segment>.*), /$\{segment}
-          uri: http://127.0.0.1:7070
-
-        - id: shop-service
-          predicates:
-            - Path=/shop/v1/**
-            - Method=GET, POST, PUT, PATCH, DELETE
-          filters:
-            - JwtAuthorizationFilter
-            - RewritePath=/shop/v1/(?<segment>.*), /$\{segment}
-          uri: http://127.0.0.1:7080
-
-        - id: elastic-service
-          predicates:
-            - Path=/elastic/**
-            - Method=GET, POST, PUT, DELETE
-          filters:
-            - RewritePath=/elastic/(?<segment>.*), /$\{segment}
-          uri: http://133.186.153.181:9200
+    import: "optional:configserver:http://config.marketgg.shop"
