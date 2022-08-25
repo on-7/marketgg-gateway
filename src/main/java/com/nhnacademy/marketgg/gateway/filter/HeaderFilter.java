@@ -30,6 +30,7 @@ public class HeaderFilter extends AbstractGatewayFilterFactory<HeaderFilter.Conf
 
             if (Objects.nonNull(forwardedFor) && Objects.nonNull(forwardedFor.get(0))) {
                 log.info("{}: {}", config.getForwardedFor(), forwardedFor.get(0));
+                log.info("URI: {}", request.getURI());
             }
 
 
