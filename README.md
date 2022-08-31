@@ -34,7 +34,7 @@ Market GG 게이트웨이는 각 서비스 또는 데이터와 접속하고 API 
 
 ## Project Architecture
 
-![marketgg-architecture-v1-0-3](https://user-images.githubusercontent.com/38161720/183289639-452bfe2d-792e-4260-a10a-652a87b62928.png)
+![marketgg-architecture-v1-0-4](https://user-images.githubusercontent.com/82259868/187658674-7e8f3a46-ffd4-4725-982f-01dba608757a.png)
 
 ## Tech Stack
 
